@@ -13,9 +13,10 @@ public class Assignment11Part1 {
      *             "1+" for parameters
      */
     public static void main(String[] args) {
+        System.out.println("Here is formula: " + args [0]);
         ParametersDataBase parameters = new ParametersDataBase(args);
         FormulaParsing parsedFormula = new FormulaParsing(args[0]);
         FormulaTree tree = new FormulaTree(parsedFormula.getParsedFormula(), parameters);
-        System.out.println(tree.parseTheTree());
+        System.out.println("Result is: " + tree.parseTheTree());
     }
 }
