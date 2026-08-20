@@ -1,10 +1,6 @@
 package com.shpp.p2p.cs.iklindukhov.assignment10;
 
-import acm.util.ErrorException;
-
 import java.util.HashMap;
-
-import static java.lang.Character.isDigit;
 import static java.lang.Character.isLetter;
 import static java.lang.Double.parseDouble;
 
@@ -15,15 +11,17 @@ public class ParametersDataBase {
     /**
      * HashMap database with name of the parameters and their values
      */
-    private final HashMap<String, Double> PARAMETERS;
-
+    private final HashMap<String, Double> parameters = new HashMap<>();
+    /**
+     *
+     */
+    private final static String PARAMETER_SPLITTER = "=";
     /**
      * Receive and parse the parameters, then create a HashMap
-     *
+     * i = 1, because i = 0 is reserved for the formula, not for the parameters
      * @param args array with parameters
      */
     public ParametersDataBase(String[] args) {
-        PARAMETERS = new HashMap<>();
         for (int i = 1; i < args.length; i++) {
             String parameter = args[i].replaceAll("\\s+", "");
             parseAndAddParameter(parameter);
@@ -37,12 +35,11 @@ public class ParametersDataBase {
      * @return parameters value
      */
     public double getValueByKey(String key) {
-        if (PARAMETERS.containsKey(key)) {
-            return PARAMETERS.get(key);
+        if (parameters.containsKey(key)) {
+            return parameters.get(key);
         }
-        throw new ErrorException("Missing " + "\"" + key + "\"" + " parameter");
+        throw new IllegalArgumentException("Missing " + "\"" + key + "\"" + " parameter");
     }
-
 
     /**
      * Parses and then adds the parameter to HashMap
@@ -50,25 +47,13 @@ public class ParametersDataBase {
      * @param parameter string containing name of the parameter and its value
      */
     private void parseAndAddParameter(String parameter) {
-        String leftPart = "";
-        String rightPart = "";
-        boolean isEqualityPresent = false;
-        for (int i = 0; i < parameter.length(); i++) {
-            char currentChar = parameter.charAt(i);
-            if (currentChar == '=') {
-                if (!isEqualityPresent) {
-                    leftPart = parameter.substring(0, i);
-                    rightPart = parameter.substring(i + 1);
-                    isEqualityPresent = true;
-                } else throw new IllegalArgumentException("two or more \"=\" operators are present");
-            }
+        String [] split =  parameter.split(PARAMETER_SPLITTER);
+        if (split.length != 2) {
+            throw new IllegalArgumentException("Parameter " + parameter + " is not valid");
         }
-        if (!isEqualityPresent) {
-            throw new IllegalArgumentException("\"=\" operator is missing in the parameter");
-        }
-        String parameterName = leftPartParsing(leftPart);
-        Double parameterValue = rightPartParsing(rightPart);
-        PARAMETERS.put(parameterName, parameterValue);
+        String parameterName = leftPartParsing(split [0]);
+        Double parameterValue = rightPartParsing(split [1]);
+        parameters.put(parameterName, parameterValue);
     }
 
     /**
@@ -81,6 +66,7 @@ public class ParametersDataBase {
         if (leftPart.isEmpty()) {
             throw new IllegalArgumentException("parameter name wasnt found");
         }
+
         StringBuilder parameterName = new StringBuilder();
         for (int i = 0; i < leftPart.length(); i++) {
             char currentChar = leftPart.charAt(i);
@@ -101,18 +87,12 @@ public class ParametersDataBase {
         if (rightPart.isEmpty()) {
             throw new IllegalArgumentException("parameter value wasnt found");
         }
-        StringBuilder parameterValue = new StringBuilder();
-        for (int i = 0; i < rightPart.length(); i++) {
-            char currentChar = rightPart.charAt(i);
-            if (i == 0 && currentChar == '-') {
-                parameterValue.append(currentChar);
-                continue;
-            }
-            if (isDigit(currentChar)) {
-                parameterValue.append(currentChar);
-            } else throw new IllegalArgumentException("something except digits was found in parameter`s value");
+        try {
+           return parseDouble(rightPart);
         }
-        return parseDouble(String.valueOf(parameterValue));
+        catch (NumberFormatException e) {
+            throw new IllegalArgumentException("something except number was found in parameter`s value");
+        }
     }
 
 }
