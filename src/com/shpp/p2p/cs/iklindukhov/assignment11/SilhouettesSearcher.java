@@ -68,7 +68,7 @@ public class SilhouettesSearcher {
         catch (StackOverflowError _) {
             throw new IllegalArgumentException ("""
                     StackOverFlow. If u are using Intellij IDEA:\s
-                    edit -> modify options -> environment variables. Than type in the appeared field:\s
+                    edit -> modify options -> add VM options. Than type in the appeared field:\s
                     -Xss8m. If error still appears, enlarge number""");
 
         }
