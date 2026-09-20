@@ -14,6 +14,7 @@ public class SilhouettesSearcher {
      * List of silhouettes found in the image.
      */
     private ArrayList<Silhouette> silhouettes = new ArrayList<>();
+    private static final int MINIMUM_SILHOUETTE_SIZE = 40;
 
     /**
      * Creates a silhouette searcher and finds all silhouettes in the matrix.
@@ -57,7 +58,9 @@ public class SilhouettesSearcher {
             } else {
                 int silhouetteColor = pixel.getColor();
                 int silhouetteSize = silhouetteSearch(pixel, silhouetteColor, 0);
+                if (silhouetteSize >= MINIMUM_SILHOUETTE_SIZE) {
                 silhouettes.add(new Silhouette(silhouetteColor, silhouetteSize));
+                }
             }
         }
     }
