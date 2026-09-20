@@ -52,6 +52,7 @@ public class SilhouettesSearcher {
      * @param backgroundColor background color of the image
      */
     private void searching(PixelObject pixel, ArrayList <Silhouette> silhouettes, int backgroundColor) {
+        try {
         if (!pixel.isVisited()) {
             if (ColorsManager.areColorsSimilar(pixel.getColor(), backgroundColor)) {
                 pixel.setVisited(true);
@@ -62,6 +63,14 @@ public class SilhouettesSearcher {
                 silhouettes.add(new Silhouette(silhouetteColor, silhouetteSize));
                 }
             }
+        }
+        }
+        catch (StackOverflowError _) {
+            throw new IllegalArgumentException ("""
+                    StackOverFlow. If u are using Intellij IDEA:\s
+                    edit -> modify options -> environment variables. Than type in the appeared field:\s
+                    -Xss8m. If error still appears, enlarge number""");
+
         }
     }
 
