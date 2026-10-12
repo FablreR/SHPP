@@ -1,4 +1,4 @@
-package com.shpp.p2p.cs.iklindukhov.assignment12;
+package com.shpp.p2p.cs.iklindukhov.assignment12V2;
 import java.awt.image.BufferedImage;
 
 /**
